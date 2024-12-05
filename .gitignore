@@ -1,3 +1,4 @@
 app.log
-idea
+.idea
 venv
+.venv
