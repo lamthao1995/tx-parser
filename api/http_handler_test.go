@@ -24,8 +24,10 @@ func TestGetCurrentBlock(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/currentBlock", nil)
 	rec := httptest.NewRecorder()
 
-	handler.RegisterRoutes(http.DefaultServeMux)
-	http.DefaultServeMux.ServeHTTP(rec, req)
+	mux := http.NewServeMux()
+	handler.RegisterRoutes(mux)
+
+	mux.ServeHTTP(rec, req)
 
 	// Step 5: Assert the response
 	assert.Equal(t, http.StatusOK, rec.Code)
@@ -55,8 +57,10 @@ func TestSubscribe(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/subscribe?address=0x123...abc", nil)
 	rec := httptest.NewRecorder()
 
-	handler.RegisterRoutes(http.DefaultServeMux)
-	http.DefaultServeMux.ServeHTTP(rec, req)
+	mux := http.NewServeMux()
+	handler.RegisterRoutes(mux)
+
+	mux.ServeHTTP(rec, req)
 
 	// Step 5: Assert the response
 	assert.Equal(t, http.StatusOK, rec.Code)

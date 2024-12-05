@@ -32,7 +32,7 @@ func (p *ParserService) GetCurrentBlock() (int, error) {
 		"jsonrpc": "2.0",
 		"method":  "eth_blockNumber",
 		"params":  []interface{}{},
-		"id":      1,
+		"id":      utils.RandomID(),
 	})
 	if err != nil {
 		return 0, err
