@@ -9,6 +9,8 @@ import (
 
 func TestSaveTransaction(t *testing.T) {
 	repo := NewMemoryRepository()
+	err := repo.Subscribe("0x123abc")
+	assert.NoError(t, err, "Expected no error while subscribe")
 
 	tx := domain.Transaction{
 		From:  "0xSender",
@@ -17,7 +19,8 @@ func TestSaveTransaction(t *testing.T) {
 		Hash:  "0x123abc",
 	}
 
-	_ = repo.SaveTransaction("0x123abc", tx)
+	err = repo.SaveTransaction("0x123abc", tx)
+	assert.NoError(t, err, "Expected no error while SaveTransaction")
 
 	transactions, _ := repo.GetTransactions("0x123abc")
 	assert.Equal(t, len(transactions), 1, "Expected 1 transaction")

@@ -1,33 +1,23 @@
 package service
 
 import (
-	"errors"
 	"fmt"
-	"sync"
 	"tx-parser/config"
 	"tx-parser/domain"
 	"tx-parser/utils"
 )
 
 type ParserService struct {
-	currentBlock  int
-	subscriptions map[string]bool
-	repo          domain.Repository
-	mu            sync.RWMutex
+	repo domain.Repository
 }
 
 func NewParserService(repo domain.Repository) *ParserService {
 	return &ParserService{
-		subscriptions: make(map[string]bool),
-		repo:          repo,
+		repo: repo,
 	}
 }
 
 func (p *ParserService) GetCurrentBlock() (int, error) {
-	// Lock the read access to ensure thread safety when reading the block number
-	p.mu.RLock()
-	defer p.mu.RUnlock()
-
 	url := config.AppConfig.EthRPCURL
 	resp, err := utils.JsonRPCRequest(url, map[string]interface{}{
 		"jsonrpc": "2.0",
@@ -53,31 +43,16 @@ func (p *ParserService) GetCurrentBlock() (int, error) {
 }
 
 func (p *ParserService) Subscribe(address string) error {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-
-	if p.subscriptions[address] {
-		return nil
-	}
-	p.subscriptions[address] = true
-	return nil
+	return p.repo.Subscribe(address)
 }
 
 func (p *ParserService) GetTransactions(address string) ([]domain.Transaction, error) {
-	p.mu.RLock()
-	defer p.mu.RUnlock()
-	if _, ok := p.subscriptions[address]; !ok {
-		return nil, errors.New("no valid address")
-	}
 
 	// Retrieve transactions from the repository
 	return p.repo.GetTransactions(address)
 }
 
 func (p *ParserService) SaveTransaction(address string, tx domain.Transaction) error {
-	// Save transaction using the repository
-	if _, ok := p.subscriptions[address]; !ok {
-		return errors.New("no valid address")
-	}
+
 	return p.repo.SaveTransaction(address, tx)
 }

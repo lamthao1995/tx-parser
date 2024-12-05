@@ -61,6 +61,24 @@ func (_m *Repository) SaveTransaction(address string, tx domain.Transaction) err
 	return r0
 }
 
+// Subscribe provides a mock function with given fields: address
+func (_m *Repository) Subscribe(address string) error {
+	ret := _m.Called(address)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Subscribe")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(address)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewRepository creates a new instance of Repository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewRepository(t interface {

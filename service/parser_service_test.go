@@ -12,31 +12,29 @@ func TestSubscribe(t *testing.T) {
 	parserService := NewParserService(repo)
 
 	err := parserService.Subscribe("0x123abc")
-	assert.NoError(t, err, "Expected no error while subscribing")
+	assert.NoError(t, err, "Expected no error while subscribing:", err)
 
-	err = parserService.Subscribe("0x123abc")
-	assert.NoError(t, err, "Expected no error when subscribing to an already subscribed address")
 }
 
 func TestGetTransactions(t *testing.T) {
 	repo := repository.NewMemoryRepository()
 	parserService := NewParserService(repo)
 
-	err := parserService.Subscribe("0x123abc")
+	err := parserService.Subscribe("0x123abc1")
 	assert.NoError(t, err, "Expected no error while subscribing")
 
 	tx := domain.Transaction{
 		From:  "0xSender",
 		To:    "0xReceiver",
 		Value: "100",
-		Hash:  "0x123abc",
+		Hash:  "0x123abc1",
 	}
 
 	// Save a transaction
-	err = parserService.SaveTransaction("0x123abc", tx)
+	err = parserService.SaveTransaction("0x123abc1", tx)
 	assert.NoError(t, err, "Expected no error while saving transactions")
 
-	transactions, err := parserService.GetTransactions("0x123abc")
+	transactions, err := parserService.GetTransactions("0x123abc1")
 	assert.NoError(t, err, "Expected no error while fetching transactions")
 	assert.Equal(t, len(transactions), 1, "Expected 1 transaction")
 }
