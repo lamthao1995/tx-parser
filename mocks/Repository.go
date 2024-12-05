@@ -14,7 +14,7 @@ type Repository struct {
 }
 
 // GetTransactions provides a mock function with given fields: address
-func (_m *Repository) GetTransactions(address string) []domain.Transaction {
+func (_m *Repository) GetTransactions(address string) ([]domain.Transaction, error) {
 	ret := _m.Called(address)
 
 	if len(ret) == 0 {
@@ -22,6 +22,10 @@ func (_m *Repository) GetTransactions(address string) []domain.Transaction {
 	}
 
 	var r0 []domain.Transaction
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]domain.Transaction, error)); ok {
+		return rf(address)
+	}
 	if rf, ok := ret.Get(0).(func(string) []domain.Transaction); ok {
 		r0 = rf(address)
 	} else {
@@ -30,12 +34,31 @@ func (_m *Repository) GetTransactions(address string) []domain.Transaction {
 		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(address)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // SaveTransaction provides a mock function with given fields: address, tx
-func (_m *Repository) SaveTransaction(address string, tx domain.Transaction) {
-	_m.Called(address, tx)
+func (_m *Repository) SaveTransaction(address string, tx domain.Transaction) error {
+	ret := _m.Called(address, tx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SaveTransaction")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, domain.Transaction) error); ok {
+		r0 = rf(address, tx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewRepository creates a new instance of Repository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

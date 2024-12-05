@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 	"tx-parser/config"
@@ -65,12 +66,18 @@ func (p *ParserService) Subscribe(address string) error {
 func (p *ParserService) GetTransactions(address string) ([]domain.Transaction, error) {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
+	if _, ok := p.subscriptions[address]; !ok {
+		return nil, errors.New("no valid address")
+	}
 
 	// Retrieve transactions from the repository
-	return p.repo.GetTransactions(address), nil
+	return p.repo.GetTransactions(address)
 }
 
-func (p *ParserService) SaveTransaction(address string, tx domain.Transaction) {
+func (p *ParserService) SaveTransaction(address string, tx domain.Transaction) error {
 	// Save transaction using the repository
-	p.repo.SaveTransaction(address, tx)
+	if _, ok := p.subscriptions[address]; !ok {
+		return errors.New("no valid address")
+	}
+	return p.repo.SaveTransaction(address, tx)
 }

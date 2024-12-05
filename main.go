@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
+	"strings"
 	"tx-parser/api"
 	"tx-parser/config"
 	"tx-parser/middleware"
 	"tx-parser/repository"
+	"tx-parser/scripts"
 	"tx-parser/service"
 	"tx-parser/utils"
 )
@@ -32,6 +33,12 @@ func main() {
 	// Start the HTTP server
 	port := config.AppConfig.ServerPort
 	fmt.Println("Server running on http://localhost:" + port)
+
+	// for testing only
+	if strings.EqualFold(config.AppConfig.IsNeedTestingData, "true") {
+		go scripts.FillData()
+	}
+
 	utils.InfoLogger.Println("Server running on http://localhost:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

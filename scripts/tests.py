@@ -39,10 +39,10 @@ def run_tests():
     test_api("/currentBlock")
 
     # 2. Test /subscribe API
-    test_api("/subscribe", params={"address": "0x123...abc"})
+    test_api("/subscribe", params={"address": "0x789ghi"})
 
     # 3. Test /transactions API
-    test_api("/transactions", params={"address": "0x123...abc"})
+    test_api("/transactions", params={"address": "0x789ghi"})
 
 
 if __name__ == "__main__":

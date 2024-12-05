@@ -72,8 +72,21 @@ func (_m *Parser) GetTransactions(address string) ([]domain.Transaction, error) 
 }
 
 // SaveTransaction provides a mock function with given fields: address, tx
-func (_m *Parser) SaveTransaction(address string, tx domain.Transaction) {
-	_m.Called(address, tx)
+func (_m *Parser) SaveTransaction(address string, tx domain.Transaction) error {
+	ret := _m.Called(address, tx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SaveTransaction")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, domain.Transaction) error); ok {
+		r0 = rf(address, tx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // Subscribe provides a mock function with given fields: address

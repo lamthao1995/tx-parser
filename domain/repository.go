@@ -1,6 +1,6 @@
 package domain
 
 type Repository interface {
-	SaveTransaction(address string, tx Transaction)
-	GetTransactions(address string) []Transaction
+	SaveTransaction(address string, tx Transaction) error
+	GetTransactions(address string) ([]Transaction, error)
 }
